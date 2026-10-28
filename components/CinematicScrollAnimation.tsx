@@ -54,40 +54,53 @@ export function CinematicScrollAnimation() {
   useEffect(() => {
     let isMounted = true;
 
-    // Load initial 20 frames immediately so UI is instant
-    const loadBatch = (start: number, end: number) => {
-      for (let i = start; i < end; i++) {
-        if (!isMounted) return;
+    // Fast batch loader with parallel pre-caching
+    const loadBatch = (indices: number[]) => {
+      indices.forEach((i) => {
+        if (!isMounted || imagesRef.current[i]) return;
         const img = new Image();
-        img.src = `/frames/frame_${String(i).padStart(4, "0")}.jpg`;
+        img.src = `/frames/frame_${String(i).padStart(4, "0")}.webp`;
         img.onload = () => {
           if (!isMounted) return;
           imagesRef.current[i] = img;
 
-          // Render first frame as soon as frame 0 arrives
-          if (i === 0) {
+          // Render immediately when frame 0 is ready
+          if (i === 0 && currentFrameRef.current === 0) {
             renderFrame(0);
           }
         };
-      }
+      });
     };
 
+    // Stage 1: Load key initial frames immediately (0 to 40)
+    const initialIndices: number[] = [];
+    for (let i = 0; i < 40; i++) initialIndices.push(i);
+    loadBatch(initialIndices);
 
-    // Immediate first 30 frames
-    loadBatch(0, 30);
+    // Stage 2: Load key sample frames across the entire sequence so any scroll point has nearby frames
+    const keyframeIndices: number[] = [];
+    for (let i = 40; i < TOTAL_FRAMES; i += 4) keyframeIndices.push(i);
+    const stage2Timer = setTimeout(() => {
+      if (isMounted) loadBatch(keyframeIndices);
+    }, 60);
 
-    // Remaining frames scheduled smoothly
-    const timer = setTimeout(() => {
-      loadBatch(30, TOTAL_FRAMES);
-    }, 150);
+    // Stage 3: Load all remaining frames
+    const remainingIndices: number[] = [];
+    for (let i = 40; i < TOTAL_FRAMES; i++) {
+      if (i % 4 !== 0) remainingIndices.push(i);
+    }
+    const stage3Timer = setTimeout(() => {
+      if (isMounted) loadBatch(remainingIndices);
+    }, 200);
 
     return () => {
       isMounted = false;
-      clearTimeout(timer);
+      clearTimeout(stage2Timer);
+      clearTimeout(stage3Timer);
     };
   }, [renderFrame]);
 
-  // Track scroll position seamlessly
+  // Track scroll position seamlessly with high-frequency sync
   useEffect(() => {
     const handleScroll = () => {
       const container = containerRef.current;
@@ -104,21 +117,26 @@ export function CinematicScrollAnimation() {
       targetFrameRef.current = progress * (TOTAL_FRAMES - 1);
     };
 
-
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // 60FPS Render loop with smooth linear interpolation (lerp)
+  // 60FPS ultra-smooth render loop with dynamic lerp tracking
   useEffect(() => {
+    let lastRendered = -1;
+
     const tick = () => {
       const diff = targetFrameRef.current - currentFrameRef.current;
 
-      // Silky responsive smoothing: lerp with 0.25 coefficient
-      if (Math.abs(diff) > 0.01) {
-        currentFrameRef.current += diff * 0.25;
-        renderFrame(currentFrameRef.current);
+      // Snappy and fluid interpolation: lerp coefficient 0.35 ensures zero perceptible lag
+      if (Math.abs(diff) > 0.005) {
+        currentFrameRef.current += diff * 0.35;
+        const targetInt = Math.round(currentFrameRef.current);
+        if (targetInt !== lastRendered) {
+          renderFrame(targetInt);
+          lastRendered = targetInt;
+        }
       }
 
       animationFrameRef.current = requestAnimationFrame(tick);
