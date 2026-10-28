@@ -177,7 +177,7 @@ export function CinematicScrollAnimation() {
           backgroundColor: "#030712",
         }}
       >
-        {/* Canvas Display */}
+        {/* Canvas Display with Ambient Glow & Zero-Cropping Responsive Fit */}
         <div
           style={{
             position: "relative",
@@ -186,27 +186,49 @@ export function CinematicScrollAnimation() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            padding: "0 8px", // Clean breathing space on small phones
           }}
         >
-          <canvas
-            ref={canvasRef}
+          {/* Subtle Ambient Radial Glow matching the frame content */}
+          <div
             style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              filter: "brightness(0.96) contrast(1.04)",
-              willChange: "transform",
+              position: "absolute",
+              width: "min(96vw, 1600px)",
+              height: "min(54vw, 900px)",
+              background: "radial-gradient(ellipse at center, rgba(0, 240, 255, 0.08) 0%, rgba(37, 99, 235, 0.04) 50%, transparent 75%)",
+              filter: "blur(60px)",
+              pointerEvents: "none",
+              zIndex: 0,
             }}
           />
 
-          {/* Subtle Ambient Vignette & Gradient Edge Transition */}
+          <canvas
+            ref={canvasRef}
+            style={{
+              maxWidth: "100%",
+              maxHeight: "100vh",
+              width: "auto",
+              height: "auto",
+              aspectRatio: "16 / 9",
+              objectFit: "contain",
+              display: "block",
+              borderRadius: "12px",
+              boxShadow: "0 20px 60px -15px rgba(0, 240, 255, 0.12), 0 0 1px 1px rgba(0, 240, 255, 0.2)",
+              filter: "brightness(0.98) contrast(1.05)",
+              willChange: "transform",
+              zIndex: 1,
+            }}
+          />
+
+          {/* Subtle Ambient Vignette Overlay */}
           <div
             style={{
               position: "absolute",
               inset: 0,
               background:
-                "radial-gradient(ellipse at center, transparent 60%, rgba(3, 7, 18, 0.3) 85%, rgba(3, 7, 18, 0.95) 100%), linear-gradient(to bottom, rgba(3, 7, 18, 0.8) 0%, transparent 12%, transparent 88%, rgba(3, 7, 18, 0.95) 100%)",
+                "linear-gradient(to bottom, rgba(3, 7, 18, 0.7) 0%, transparent 15%, transparent 85%, rgba(3, 7, 18, 0.95) 100%)",
               pointerEvents: "none",
+              zIndex: 2,
             }}
           />
         </div>
@@ -214,4 +236,5 @@ export function CinematicScrollAnimation() {
     </section>
   );
 }
+
 
