@@ -1,69 +1,85 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import { SiteHeader } from "@/components/SiteHeader";
+import { CinematicScrollAnimation } from "@/components/CinematicScrollAnimation";
+import { HeroSection } from "@/components/HeroSection";
+import { CoordinationProblem } from "@/components/CoordinationProblem";
+import { RouteConvergenceDemo } from "@/components/RouteConvergenceDemo";
+import { HowItWorks } from "@/components/HowItWorks";
+import { GroupTripsSection } from "@/components/GroupTripsSection";
+import { SoloTripsSection } from "@/components/SoloTripsSection";
+import { LiveProgressSection } from "@/components/LiveProgressSection";
+import { NearbyDiscoverySection } from "@/components/NearbyDiscoverySection";
+import { TripChatSection } from "@/components/TripChatSection";
+import { AppShowcase } from "@/components/AppShowcase";
+import { ThemeComparison } from "@/components/ThemeComparison";
+import { UseCasesSection } from "@/components/UseCasesSection";
+import { PrivacyTrustSection } from "@/components/PrivacyTrustSection";
+import { FAQSection } from "@/components/FAQSection";
+import { FinalCTA } from "@/components/FinalCTA";
+import { SiteFooter } from "@/components/SiteFooter";
+import { NeonBackgroundCanvas } from "@/components/NeonBackgroundCanvas";
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>
-            To get started, edit the{" "}
-            <code className={styles.code}>page.tsx</code> file.
-          </h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+    <>
+      {/* Dynamic Ambient Neon Particle Canvas */}
+      <NeonBackgroundCanvas />
+
+      {/* 01 — Site Navigation Header */}
+      <SiteHeader />
+
+      <main style={{ position: "relative", zIndex: 1 }}>
+        {/* 00 — 20-Second Continuous Cinematic Scroll Animation (Part 1 + Part 2) */}
+        <CinematicScrollAnimation />
+
+        {/* 02 — Cinematic Hero */}
+        <HeroSection />
+
+
+        {/* 03 — The Problem: Coordinating People is Hard */}
+        <CoordinationProblem />
+
+        {/* 04 — The Signature Core Feature: Meet in the Middle */}
+        <RouteConvergenceDemo />
+
+        {/* 05 — How Zyncers Works (4 Steps) */}
+        <HowItWorks />
+
+        {/* 06 — Group Trips Dedicated Section */}
+        <GroupTripsSection />
+
+        {/* 07 — Solo Trips Dedicated Section */}
+        <SoloTripsSection />
+
+        {/* 08 — Live Progress & Move Together */}
+        <LiveProgressSection />
+
+        {/* 09 — Discover Places Around Your Plan */}
+        <NearbyDiscoverySection />
+
+        {/* 10 — Stay In Sync (Trip Chat) */}
+        <TripChatSection />
+
+        {/* 11 — Inside the Zyncers App (Showcase) */}
+        <AppShowcase />
+
+        {/* 12 — Your App, Your Style (Themes) */}
+        <ThemeComparison />
+
+        {/* 13 — Built For Real Life (Use Cases) */}
+        <UseCasesSection />
+
+        {/* 14 — Privacy and Sharing Control */}
+        <PrivacyTrustSection />
+
+        {/* 15 — Frequently Asked Questions */}
+        <FAQSection />
+
+        {/* 16 — Final Conversion Section */}
+        <FinalCTA />
       </main>
-    </div>
+
+      {/* 17 — Site Footer */}
+      <SiteFooter />
+    </>
   );
 }
